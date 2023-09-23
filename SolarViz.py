@@ -6,17 +6,23 @@ import streamlit as st
 import requests
 from requests.auth import HTTPBasicAuth
 from scripts.login import login
+from scripts.intro import intro
 from scripts.intial_url_to_other import get_json_from_string
 from scripts.getting_DT_from_user import getting_DT_from_user
+from scripts.charts import displayChart
 
 import os
 from dotenv import load_dotenv
 
 def main(user, pw):
   st.title("Welcome to Solar Viz!")
+  
+  st.write(intro)
+  
+  displayChart()
 
-  result = getting_DT_from_user(user, pw)
-  st.write(result)
+  # result = getting_DT_from_user(user, pw)
+  # st.write(result)
 
 
 
