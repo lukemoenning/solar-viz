@@ -8,11 +8,12 @@ from requests.auth import HTTPBasicAuth
 from scripts.login import login
 from datetime import datetime
 
+
 import os
 from dotenv import load_dotenv
 
 
-def main():
+def main(user, pw):
   st.title("Welcome to Solar Viz!")
 
 
@@ -33,7 +34,7 @@ if response.status_code == 200:
     # Parse the JSON response
     data = response.json()
 
-st.write("JSON Response:", data)
+#st.write("JSON Response:", data)
 
 
 
@@ -169,6 +170,18 @@ if response.status_code == 200:
     ).properties(
         width=800  # Set the chart width
     )
+
+    #cost of installing the equivilant amount of solar panels
+    sum_list = sum(Electrical_Array_Sq_Feet_values)
+    average_electrical = sum_list/len(Electrical_Array_Sq_Feet_values)
+    sum_list1 = sum(Cambus_Array_Sq_Feet_values)
+    average_cambus = sum_list1/len(Cambus_Array_Sq_Feet_values)
+
+    cost1 = (average_electrical/180)*890479.6
+    cost2 = (average_cambus/267.13)*509531
+
+
+
   
 
     # Display the chart in Streamlit
@@ -177,15 +190,22 @@ if response.status_code == 200:
     st.altair_chart(chart1)
     st.altair_chart(chart2)
     st.altair_chart(chart3)
+    st.write("Predicted cost to replace steam plant with Electrical Vehicle Changing Array, without accounting for degradation")
+    st.write(cost1)
+
+    
+
+    st.write("Predicted cost to replace steam plant with Cambus Array without accounting for degradation")
+    st.write(cost2)
 else:
     st.write("Error:", response.status_code)
 
 
 if __name__ == "__main__":
-  #load_dotenv()
-  #user = os.getenv('USER')
-  #pw = os.getenv('PW')
-  #main(user, pw)
-  if login():
+  load_dotenv()
+  user = os.getenv('USER')
+  pw = os.getenv('PW')
+  main(user, pw)
+  #if login():
 
-    main()
+    

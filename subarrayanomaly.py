@@ -23,7 +23,7 @@ def main(user, pw):
   #work on busburn
   #URL to just busbarn
 
-  url = "https://itsnt2259.iowa.uiowa.edu/piwebapi/elements/F1EmAVYciAZHVU6DzQbJjxTxWwYTCY6CdT7hGiW-T9RdLVfgSVRTTlQyMjU5XFJZQU4gU0FOREJPWFxTT0xBUiBQUk9EVUNUSU9OXEVMRUNUUklDIFZFSElDTEUgQ0hBUkdJTkc/elements"
+  url = "https://itsnt2259.iowa.uiowa.edu/piwebapi/elements/F1EmAVYciAZHVU6DzQbJjxTxWwimrOBShT7hGiW-T9RdLVfgSVRTTlQyMjU5XFJZQU4gU0FOREJPWFxTT0xBUiBQUk9EVUNUSU9OXEJVUyBCQVJO/elements"
 
   pw = os.getenv('PW')
   user = os.getenv('USER')
@@ -89,7 +89,7 @@ def main(user, pw):
     # Create a new list containing items with "KWH Tag" in the "Name" field
     kWh_items = [item for item in extracted_data if "Name" in item and item["Name"] == "KWH Tag"]
 
-    st.write("Sub-Array Anomaly Analysis for the electric vehicle charging solar arrays")
+    st.write("Sub-Array Anomaly Analysis for the busbarn solar arrays")
     st.write("This is a graph of all the busbarn subarrays, with the first sub array being the left-most 0 index, and each subsequent sub array follows.")
 
 

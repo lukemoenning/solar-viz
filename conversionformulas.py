@@ -53,7 +53,34 @@ for item in original_data["Items"]:
         "UnitsAbbreviation": item["Value"]["UnitsAbbreviation"]
     })
 
-#conversion 
+#conversion for weeks
+
+# Initialize variables for tracking week and value
+current_week = 0
+current_value = None
+
+# Iterate through the original data
+for item in original_data["Items"]:
+    timestamp_str = item["Value"]["Timestamp"]
+    timestamp = datetime.fromisoformat(timestamp_str)
+
+    # Calculate the week difference from the first timestamp
+    week_difference = (timestamp - datetime.fromisoformat(original_data["Items"][0]["Value"]["Timestamp"])).days // 7
+
+    # If a new week is reached, update the week and current value
+    if week_difference > current_week:
+        current_week = week_difference
+        current_value = item["Value"]["Value"]
+
+    # Append the data to the new list
+    new_data.append({
+        "Week": current_week,
+        "Value": current_value,
+        "UnitsAbbreviation": item["Value"]["UnitsAbbreviation"]
+    })
+
+# The new_data list now contains the transformed data with weekly changes
+print(new_data)
 
 
 if __name__ == "__main__":
