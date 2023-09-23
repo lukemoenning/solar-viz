@@ -4,16 +4,24 @@ from requests.auth import HTTPBasicAuth
 import pandas as pd
 import altair as alt
 
+
 def get_stream_id(solar_option):
+    '''
+    Returns the stream ID for the specified solar option
+    '''
+
     stream_ids = {
         "Cambus": "F1AbEAVYciAZHVU6DzQbJjxTxWwimrOBShT7hGiW-T9RdLVfgFiqSlzYXN1c8B8kKhkXr4ASVRTTlQyMjU5XFJZQU4gU0FOREJPWFxTT0xBUiBQUk9EVUNUSU9OXEJVUyBCQVJOfERBSUxZIFRPVEFM",
         "Electric Vehicle Charging Station": "F1AbEAVYciAZHVU6DzQbJjxTxWwYTCY6CdT7hGiW-T9RdLVfg_XDEejkXN1c8B8kKhkXr4ASVRTTlQyMjU5XFJZQU4gU0FOREJPWFxTT0xBUiBQUk9EVUNUSU9OXEVMRUNUUklDIFZFSElDTEUgQ0hBUkdJTkd8REFJTFkgVE9UQUw",
-        "Cambus and EV Charging Station": "YOUR_STREAM_ID_HERE"  # Replace with the actual stream ID
     }
 
     return stream_ids.get(solar_option, None)
 
 def get_json_for_dates(start_date, end_date, stream_id, username, password):
+    '''
+    
+    '''
+
     base_url = 'https://itsnt2259.iowa.uiowa.edu/piwebapi/streams/'
 
     start_datetime = f'{start_date}T00:00:00'

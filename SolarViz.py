@@ -19,7 +19,7 @@ def main(user, pw):
     
   st.write(intro)
   
-  start_date, end_date = displayChart(user,pw)
+  displayChart(user,pw)
 
   # chart, total_energy = getting_DT_from_user(user, pw, start_date, end_date)
   # st.write("Total Energy:", total_energy)
