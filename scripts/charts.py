@@ -4,7 +4,7 @@ import numpy as np
 from datetime import datetime
 import altair as alt
 from scripts.getting_DT_from_user import getting_DT_from_user
-from scripts.conversion_efficiency import calc_conversion_efficiency, main
+from scripts.conversion_efficiency import calc_conversion_efficiency, main2
 
 
 def displayChart(username, password):
@@ -41,7 +41,7 @@ def displayChart(username, password):
 
 
 
-    main(start_date, end_date, solar_option, username, password)
+    main2(start_date, end_date, solar_option, username, password)
 
     # try:
     #   main(start_date, end_date, solar_option, username, password)
