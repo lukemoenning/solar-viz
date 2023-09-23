@@ -8,4 +8,5 @@ def analysis(analysis_page, user, pw):
   # RETURN HOME BUTTON
   if st.button("Return Home"):
     analysis_page.empty()
+
     return

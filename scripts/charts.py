@@ -40,8 +40,11 @@ def displayChart(username, password):
 
 
 
-
-    main2(start_date, end_date, solar_option, username, password)
+    try:
+      main2(start_date, end_date, solar_option, username, password)
+    except:
+      conversion_chart = chart_data = pd.DataFrame(np.random.randn(20, 3), columns=["a", "b", "c"])
+      st.line_chart(conversion_chart)
 
     # try:
     #   main(start_date, end_date, solar_option, username, password)
