@@ -6,17 +6,18 @@ import streamlit as st
 import requests
 from requests.auth import HTTPBasicAuth
 from scripts.login import login
+from scripts.intial_url_to_other import get_json_from_string
+from scripts.getting_DT_from_user import getting_DT_from_user
 
 import os
 from dotenv import load_dotenv
 
 def main(user, pw):
   st.title("Welcome to Solar Viz!")
-  
-  url = 'https://itsnt2259.iowa.uiowa.edu/piwebapi/elements/F1EmAVYciAZHVU6DzQbJjxTxWwCeQh1CdT7hGiW-T9RdLVfgSVRTTlQyMjU5XFJZQU4gU0FOREJPWFxTT0xBUiBQUk9EVUNUSU9O/elements'
-  req = requests.get(url, auth=HTTPBasicAuth(user, pw))
 
-  st.write(req.text)
+  result = getting_DT_from_user(user, pw)
+  st.write(result)
+
 
 
 if __name__ == "__main__":
