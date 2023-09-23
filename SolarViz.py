@@ -28,12 +28,22 @@ def main(user, pw):
     for _ in range(5):
       st.write(" ")
   
-    analysis_columns = st.columns(3)
-    with analysis_columns[1]:
-      if st.button("In-Depth Analysis"):
-        home_page.empty()
-        with analysis_page.container():
-          analysis(analysis_page, user, pw)
+
+  displayChart(user,pw)
+
+  # chart, total_energy = getting_DT_from_user(user, pw, start_date, end_date)
+  # st.write("Total Energy:", total_energy)
+
+  # st.write("Daily Energy Production:")
+  # st.altair_chart(chart)
+
+  analysis_columns = st.columns(3)
+  with analysis_columns[1]:
+    if st.button("In-Depth Analysis"):
+      home_page.empty()
+      with analysis_page.container():
+        analysis(analysis_page, user, pw)
+
 
 
 if __name__ == "__main__":

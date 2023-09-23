@@ -4,11 +4,12 @@ import numpy as np
 from datetime import datetime
 import altair as alt
 from scripts.getting_DT_from_user import getting_DT_from_user
+from scripts.conversion_efficiency import calc_conversion_efficiency, main
 
 
 def displayChart(username, password):
   chart_container = st.empty()
-  
+
   with chart_container.container():
     st.title("Data Comparison")
     
@@ -29,13 +30,27 @@ def displayChart(username, password):
       st.write(" ")
 
     try:
-        # Retrieve data
-        chart_data, total_energy = getting_DT_from_user(username, password, start_date, end_date, solar_option)
-        st.write("Total Energy:", total_energy)
+      # Retrieve data
+      chart_data, total_energy = getting_DT_from_user(username, password, start_date, end_date, solar_option)
+      st.write("Total Energy:", total_energy)
     except:
       chart_data = pd.DataFrame(np.random.randn(20, 3), columns=["a", "b", "c"])
 
       st.line_chart(chart_data)
+
+
+
+
+    main(start_date, end_date, solar_option, username, password)
+
+    # try:
+    #   main(start_date, end_date, solar_option, username, password)
+    #   # conversion_chart =
+    #   # st.write("Conversion Efficiency:", conversion_chart)
+    # except:
+    #   conversion_chart = chart_data = pd.DataFrame(np.random.randn(20, 3), columns=["a", "b", "c"])
+    #   st.line_chart(conversion_chart)
+    #   st.write("Conversion Efficiency:", conversion_chart)
 
 
     st.write("For more in-depth analysis, please visit")
