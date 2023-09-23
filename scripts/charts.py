@@ -19,18 +19,18 @@ def displayChart(username, password):
     
     with columns[0]:
       start_date = st.date_input(date_options[0])
-      st.radio("Select a Granularity Option", granuality_options)
+      granularity = st.radio("Select a Granularity Option", granuality_options)
       
     with columns[1]:
       end_date = st.date_input(date_options[1])
-      st.radio("Select a Solar Option", solar_options)
+      solar_option = st.radio("Select a Solar Option", solar_options)
     
     for i in range(3):
       st.write(" ")
 
     try:
         # Retrieve data
-        chart_data, total_energy = getting_DT_from_user(username, password, start_date, end_date)
+        chart_data, total_energy = getting_DT_from_user(username, password, start_date, end_date, solar_option)
         st.write("Total Energy:", total_energy)
     except:
       chart_data = pd.DataFrame(np.random.randn(20, 3), columns=["a", "b", "c"])
