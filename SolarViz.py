@@ -7,6 +7,9 @@ import requests
 from requests.auth import HTTPBasicAuth
 from scripts.login import login
 
+import os
+from dotenv import load_dotenv
+
 def main(user, pw):
   st.title("Welcome to Solar Viz!")
   
@@ -23,9 +26,8 @@ if __name__ == "__main__":
   #     main(user, pw)
   
   
-  # DO NOT COMMIT WITH CREDENTIALS
-  # !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
   # JUST FOR DEVELOPMENT PURPOSES
-  user = ''
-  pw = ''
+  load_dotenv()
+  user = os.getenv('USER')
+  pw = os.getenv('PW')
   main(user, pw)
