@@ -7,7 +7,7 @@ from scripts.getting_DT_from_user import getting_DT_from_user, get_json_for_date
 
 def generate_solar_irradiance(num_values, initial_irradiance, irradiance_step):
     irradiances =  [initial_irradiance - i * irradiance_step for i in range(num_values)][::-1]
-    st.write(irradiances)
+    # st.write(irradiances)
     return irradiances
 
 def calc_conversion_efficiency(solar_irradiance, solar_option, username, password, start_date, end_date):
@@ -35,7 +35,7 @@ def calc_conversion_efficiency(solar_irradiance, solar_option, username, passwor
     
     return df
 
-def main(start_date, end_date, solar_option, username, password):
+def main2(start_date, end_date, solar_option, username, password):
     # Define solar irradiance values
     initial_irradiance = 10.0  # Initial solar irradiance
     num_values = 10  # Adjust the number of values as needed
