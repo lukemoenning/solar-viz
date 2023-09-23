@@ -1,0 +1,8 @@
+version: '3'
+services:
+  solarviz:
+    image: solarviz:latest
+    ports:
+      - "8501:8501"
+    volumes:
+      - .:/app:ro
