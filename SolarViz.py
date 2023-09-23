@@ -16,13 +16,16 @@ from dotenv import load_dotenv
 
 def main(user, pw):
   st.title("Welcome to Solar Viz!")
-  
+    
   st.write(intro)
   
-  displayChart()
+  start_date, end_date = displayChart(user,pw)
 
-  # result = getting_DT_from_user(user, pw)
-  # st.write(result)
+  # chart, total_energy = getting_DT_from_user(user, pw, start_date, end_date)
+  # st.write("Total Energy:", total_energy)
+
+  # st.write("Daily Energy Production:")
+  # st.altair_chart(chart)
 
 
 

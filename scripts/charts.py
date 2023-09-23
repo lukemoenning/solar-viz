@@ -2,8 +2,11 @@ import streamlit as st
 import pandas as pd
 import numpy as np
 from datetime import datetime
+import altair as alt
+from scripts.getting_DT_from_user import getting_DT_from_user
 
-def displayChart():
+
+def displayChart(username, password):
   chart_container = st.empty()
   
   with chart_container.container():
@@ -11,22 +14,32 @@ def displayChart():
     
     columns = st.columns(2)
     date_options = ["Select a Start Date", "Select an End Date"]
-    solar_options = ["Cambus", "Electric Vehicle Charging Station"]
+    solar_options = ["Cambus", "Electric Vehicle Charging Station", "Cambus and EV Charging Station"]
     granuality_options = ["Hourly", "Daily", "Monthly"]
     
     with columns[0]:
-      st.date_input(date_options[0])
+      start_date = st.date_input(date_options[0])
       st.radio("Select a Granularity Option", granuality_options)
       
     with columns[1]:
-      st.date_input(date_options[1])
+      end_date = st.date_input(date_options[1])
       st.radio("Select a Solar Option", solar_options)
     
-      
-    chart_data = pd.DataFrame(np.random.randn(20, 3), columns=["a", "b", "c"])
+    for i in range(3):
+      st.write(" ")
 
-    st.line_chart(chart_data)
-    
+    try:
+        # Retrieve data
+        chart_data, total_energy = getting_DT_from_user(username, password, start_date, end_date)
+        st.write("Total Energy:", total_energy)
+    except:
+      chart_data = pd.DataFrame(np.random.randn(20, 3), columns=["a", "b", "c"])
+
+      st.line_chart(chart_data)
+
+
     st.write("For more in-depth analysis, please visit")
+
+    return start_date, end_date
       
     
