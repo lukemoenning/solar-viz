@@ -24,19 +24,10 @@ def main(user, pw):
     st.write(intro)
     
     start_date, end_date = displayChart(user,pw)
-    
-    for _ in range(5):
-      st.write(" ")
-  
 
-  # displayChart(user,pw)
 
-  # chart, total_energy = getting_DT_from_user(user, pw, start_date, end_date)
-  # st.write("Total Energy:", total_energy)
-
-  # st.write("Daily Energy Production:")
-  # st.altair_chart(chart)
-
+  for _ in range(5):
+    st.write(" ")
   analysis_columns = st.columns(3)
   with analysis_columns[1]:
     if st.button("In-Depth Analysis"):
