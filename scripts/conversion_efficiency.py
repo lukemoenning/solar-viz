@@ -44,16 +44,27 @@ def main2(start_date, end_date, solar_option, username, password):
     # Calculate conversion efficiency
     conversion_df = calc_conversion_efficiency(solar_irradiance, solar_option, username, password, start_date, end_date)
 
+    # Set the domain for the x-axis to cover a larger range
+    x_domain = (
+        pd.Timestamp(min(conversion_df['Timestamp'])) - pd.Timedelta(days=1),
+        pd.Timestamp(max(conversion_df['Timestamp'])) + pd.Timedelta(days=1)
+    )
+
     # Plot the conversion efficiency
     if not conversion_df.empty:
-        chart = alt.Chart(conversion_df).mark_line().encode(
-            x=alt.X('Timestamp:T', title='Timestamp'),
-            y=alt.Y('Conversion Efficiency', title='Conversion Efficiency'),
-            tooltip=['Timestamp:T', 'Conversion Efficiency']
+        conversion_chart = alt.Chart(conversion_df).mark_line().encode(
+            x=alt.X('Timestamp:T', scale=alt.Scale(domain=x_domain)),
+            y=alt.Y('Conversion Efficiency:Q', axis=alt.Axis(title='Conversion Efficiency')),
+            color='SolarOption:N',
+            tooltip=['Timestamp:T', 'Conversion Efficiency:Q']
         ).properties(
-            width=700,
-            height=300,
+            width=700,  # Set a fixed width
+            height=300,  # Set a fixed height
             title=f'Conversion Efficiency for {solar_option}'
+        ) + alt.Chart(conversion_df).mark_circle(size=100).encode(
+            x='Timestamp:T',
+            y='Conversion Efficiency:Q',
+            tooltip=['Timestamp:T', 'Conversion Efficiency:Q']
         )
 
-        st.altair_chart(chart)  # Display Altair chart
+        st.altair_chart(conversion_chart)
