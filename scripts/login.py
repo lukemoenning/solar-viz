@@ -7,18 +7,18 @@ def login():
   
   with login_page.container():
     st.title("Solar Viz Login")
-    username = st.text_input("Username", value="iowa\\")
+    username = st.text_input("HawkID")
     password = st.text_input("Password", type="password")
     
     if st.button("Login"):
       if authenticate(username, password):
         st.success("Login Successful!")
         login_page.empty()
-        return True
+        return (username, password)
         
       else:
         st.error("Authentication failed. Please check your credentials.")
-        return False
+        return ('', '')
     
   
 # Try to authenticate with the PI Web API
