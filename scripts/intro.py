@@ -1,7 +1,19 @@
 intro = """
-Lorem ipsum dolor sit amet, consectetur adipiscing elit. Duis pellentesque ac turpis nec molestie. Praesent eget venenatis velit. Nunc tortor ipsum, congue vel turpis at, rhoncus consectetur nulla. Donec aliquet odio a egestas consequat. Maecenas condimentum, dui a suscipit tristique, tortor diam sagittis dui, sit amet tempus arcu orci ac est. Pellentesque maximus massa in risus congue lobortis. Duis tortor sem, sagittis non est vitae, molestie volutpat metus. Etiam quis scelerisque massa. Nulla pellentesque quam dolor. Sed nunc sem, lobortis sit amet ultricies in, porttitor at lacus. Vivamus sollicitudin tortor sed dui sollicitudin viverra. Phasellus et condimentum leo. Maecenas dignissim odio at consequat condimentum. In hac habitasse platea dictumst. Vivamus commodo ex dui, ac dignissim risus consequat ac.
+Solar Viz is a comprehensive data tool designed to enhance the understanding and performance of Engie's solar installations. This tool facilitates insightful analyses and predictions related to solar panel performance, aiding in informed decision-making for future solar projects.
 
-Donec blandit dignissim velit a tempor. Proin euismod tincidunt erat. Nunc id pretium neque. Nunc non urna ac tellus gravida vestibulum at vel eros. Nulla euismod, ex id lacinia laoreet, nisi velit mattis ex, sed aliquet quam mi sollicitudin magna. Nulla ut viverra sem. Duis eu purus eu nunc ornare pulvinar vitae eu orci. Quisque consectetur dictum nibh ac feugiat. Proin vulputate tellus vitae est tristique, id condimentum tellus faucibus. Nam erat dui, hendrerit vitae mauris in, rhoncus lobortis orci.
+Level One: On the homepage, there are 3 graphs based on the user's date inputs. 
+1. The first graph shows the solar panel daily generation data for the selected time period.
+2. The second graph shows the conversion efficiency of the solar panels for the selected time period.
+3. The third graph shows the cost of the energy that the solar panels for the selected time period generated.
 
-Sed interdum viverra arcu, at vestibulum neque. Donec sed iaculis odio. Sed non magna a velit pulvinar imperdiet. Vivamus et laoreet mauris. Pellentesque sagittis ullamcorper aliquam. Nulla vitae ligula fringilla, commodo purus vitae, imperdiet neque. Donec et lorem porttitor, ultrices erat a, tristique dolor. Etiam faucibus, est eget laoreet interdum, ligula orci accumsan dolor, sit amet facilisis eros enim eu nisi. Sed suscipit ipsum lacus, placerat lobortis massa consectetur sit amet. Nunc nisi felis, tempor nec elementum quis, finibus et erat.
-"""
+Level Two: On the in-depth analysis page, there are 6 analyses that can be performed on the solar panel data.
+1. Degradation Analysis
+Solar Viz evaluates degradation rates, determining whether degradation is linear or exponential. It predicts future degradation levels for each installation, assisting in proactive maintenance and planning.
+
+2. Payback Analysis
+The tool compares the financial success of solar projects by analyzing the offset electricity against representative electricity rates from MidAmerican Energy. It provides insights into the profitability of each installation and predicts when they will turn a profit.
+
+3. Performance Analysis
+Solar Viz validates performance predictions for different solar technologies and conditions, assessing generation during peak and off-peak periods. It analyzes the impact of weather conditions on performance, validating initial predictions and suggesting potential operational optimizations.
+
+Solar Viz empowers ENGIE and the University of Iowa to make data-driven decisions, optimize solar installations, and move towards a sustainable and efficient energy future."""
