@@ -3,17 +3,33 @@ import requests
 from requests.auth import HTTPBasicAuth
 import pandas as pd
 import altair as alt
+import csv
 from scripts.getting_DT_from_user import getting_DT_from_user, get_json_for_dates, get_stream_id
 
-def generate_solar_irradiance(num_values, initial_irradiance, irradiance_step):
-    irradiances =  [initial_irradiance - i * irradiance_step for i in range(num_values)][::-1]
-    # st.write(irradiances)
+def generate_solar_irradiance(solar_option):
+    irradiances = []
+    if solar_option == "Cambus":
+        with open('9degree_averages/9_degree_fixed_tilt.csv', 'r') as csvfile:
+            reader = csv.reader(csvfile)
+            for row in reader:
+                irradiances.append(row)
+    elif solar_option == "Electric Vehicle Charging Station":
+        with open('30degree_averages/30_degree_fixed_tilt.csv', 'r') as csvfile:
+            reader = csv.reader(csvfile)
+            for row in reader:
+                irradiances.append(row)
+    else:
+        with open('30degree_averages/30_degree_fixed_tilt.csv', 'r') as csvfile:
+            reader = csv.reader(csvfile)
+            for row in reader:
+                irradiances.append(row)
     return irradiances
+
 
 def calc_conversion_efficiency(solar_irradiance, solar_option, username, password, start_date, end_date):
     solar_area = {
-        'Cambus': 180.0,
-        'EV Charging Station': 237.14
+        'Cambus': 180.0/10.7639, # area in m^2
+        'EV Charging Station': 267.14/10.7639 # area in m^2
     }
     
     if solar_option == "Cambus":
@@ -23,8 +39,8 @@ def calc_conversion_efficiency(solar_irradiance, solar_option, username, passwor
 
         # Generate solar irradiance values based on data length
         num_values = len(data_cambus)
-        irradiance_step = (max(solar_irradiance) - min(solar_irradiance)) / num_values
-        solar_irradiance_values = generate_solar_irradiance(num_values, max(solar_irradiance), irradiance_step)
+        # irradiance_step = (max(solar_irradiance) - min(solar_irradiance)) / num_values
+        # solar_irradiance_values = generate_solar_irradiance(num_values, max(solar_irradiance), irradiance_step)
 
         df = pd.DataFrame(data_cambus)
         df['Conversion Efficiency'] = [value / (irradiance * solar_area['Cambus']) for value, irradiance in zip(df['Value'], solar_irradiance_values)]
