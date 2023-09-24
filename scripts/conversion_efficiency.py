@@ -15,7 +15,6 @@ def calc_conversion_efficiency(solar_irradiance, solar_option, username, passwor
         'Cambus': 180.0,
         'EV Charging Station': 237.14
     }
-
     if solar_option == "Cambus":
         cambus_stream_id = get_stream_id("Cambus")
         response_cambus = get_json_for_dates(start_date, end_date, cambus_stream_id, username, password)
@@ -29,10 +28,39 @@ def calc_conversion_efficiency(solar_irradiance, solar_option, username, passwor
         df = pd.DataFrame(data_cambus)
         df['Conversion Efficiency'] = [value / (irradiance * solar_area['Cambus']) for value, irradiance in zip(df['Value'], solar_irradiance_values)]
     
-    elif solar_option == "EV Charging Station":
-        # Complete this part
-        return 0
+    elif solar_option == "Electric Vehicle Charging Station":
+        ev_stream_id = get_stream_id("Electric Vehicle Charging Station")
+        response_ev = get_json_for_dates(start_date, end_date, ev_stream_id, username, password)
+        data_ev = [{"Timestamp": item['Value']['Timestamp'], "Value": item['Value']['Value'], "SolarOption": "EV Charging Station"} for item in response_ev['Items']]
+        
+        # Generate solar irradiance values based on data length
+        num_values = len(data_ev)
+        irradiance_step = (max(solar_irradiance) - min(solar_irradiance)) / num_values
+        solar_irradiance_values = generate_solar_irradiance(num_values, max(solar_irradiance), irradiance_step)
+
+        df = pd.DataFrame(data_ev)
+        df['Conversion Efficiency'] = [value / (irradiance * solar_area['EV Charging Station']) for value, irradiance in zip(df['Value'], solar_irradiance_values)]
     
+    else:
+        cambus_stream_id = get_stream_id("Cambus")
+        response_cambus = get_json_for_dates(start_date, end_date, cambus_stream_id, username, password)
+        ev_stream_id = get_stream_id("Electric Vehicle Charging Station")
+        response_ev = get_json_for_dates(start_date, end_date, ev_stream_id, username, password)
+
+        # Process data for Cambus
+        data_cambus = [{"Timestamp": item['Value']['Timestamp'], "Value": item['Value']['Value'], "SolarOption": "Cambus"} for item in response_cambus['Items']] if 'Items' in response_cambus else []
+        # Process data for EV Charging Station
+        data_ev = [{"Timestamp": item['Value']['Timestamp'], "Value": item['Value']['Value'], "SolarOption": "EV Charging Station"} for item in response_ev['Items']] if 'Items' in response_ev else []
+
+        df = pd.DataFrame(data_cambus + data_ev)  # Combine data from both options into a single DataFrame
+
+        # Generate solar irradiance values based on data length
+        num_values = len(df)
+        irradiance_step = (max(solar_irradiance) - min(solar_irradiance)) / num_values
+        solar_irradiance_values = generate_solar_irradiance(num_values, max(solar_irradiance), irradiance_step)
+
+        # Calculate conversion efficiency for combined data
+        df['Conversion Efficiency'] = [value / (irradiance * solar_area[df['SolarOption'].iloc[i]]) for i, (value, irradiance) in enumerate(zip(df['Value'], solar_irradiance_values))]
     return df
 
 def main2(start_date, end_date, solar_option, username, password):

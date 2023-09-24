@@ -11,6 +11,8 @@ def get_stream_id(solar_option):
     stream_ids = {
         "Cambus": "F1AbEAVYciAZHVU6DzQbJjxTxWwimrOBShT7hGiW-T9RdLVfgFiqSlzYXN1c8B8kKhkXr4ASVRTTlQyMjU5XFJZQU4gU0FOREJPWFxTT0xBUiBQUk9EVUNUSU9OXEJVUyBCQVJOfERBSUxZIFRPVEFM",
         "Electric Vehicle Charging Station": "F1AbEAVYciAZHVU6DzQbJjxTxWwYTCY6CdT7hGiW-T9RdLVfg_XDEejkXN1c8B8kKhkXr4ASVRTTlQyMjU5XFJZQU4gU0FOREJPWFxTT0xBUiBQUk9EVUNUSU9OXEVMRUNUUklDIFZFSElDTEUgQ0hBUkdJTkd8REFJTFkgVE9UQUw",
+        "EV Charging Station": "F1AbEAVYciAZHVU6DzQbJjxTxWwYTCY6CdT7hGiW-T9RdLVfg_XDEejkXN1c8B8kKhkXr4ASVRTTlQyMjU5XFJZQU4gU0FOREJPWFxTT0xBUiBQUk9EVUNUSU9OXEVMRUNUUklDIFZFSElDTEUgQ0hBUkdJTkd8REFJTFkgVE9UQUw",
+
     }
     return stream_ids.get(solar_option, None)
 
@@ -57,14 +59,18 @@ def getting_DT_from_user(username, password, start_date, end_date, solar_option)
         df = pd.DataFrame(data_cambus + data_ev)  # Combine data from both options into a single DataFrame
 
     else:
+        if solar_option == "Electric Vehicle Charging Station":
+            solar_option = "EV Charging Station"  # Rename solar_option if needed
+
         stream_id = get_stream_id(solar_option)
         response = get_json_for_dates(start_date, end_date, stream_id, username, password)
 
         if 'Items' in response:
-            data = [{"Timestamp": item['Value']['Timestamp'], "Value": item['Value']['Value']} for item in response['Items']]
+            data = [{"Timestamp": item['Value']['Timestamp'], "Value": item['Value']['Value'], "SolarOption": solar_option} for item in response['Items']]
             df = pd.DataFrame(data)
         else:
             df = pd.DataFrame()
+
 
     with st.container():
         total_energy = df['Value'].sum()
