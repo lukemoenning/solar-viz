@@ -24,7 +24,7 @@ def generate_solar_irradiance(solar_option, start_date, end_date):
 
                 if start_date <= row_date <= end_date:
 
-                    irradiances.append(float(row[8])/1000*24)  # Append GHI value (index 8)
+                    irradiances.append(float(row[8])*24/1000)  # Append GHI value (index 8)
 
     elif solar_option == "Electric Vehicle Charging Station":
         with open('9degree_averages/9_degree_fixed_tilt.csv', 'r') as csvfile:
@@ -35,7 +35,7 @@ def generate_solar_irradiance(solar_option, start_date, end_date):
                 row_year, row_month, row_day = map(int, row[:3])
                 row_date = date(year=row_year, month=row_month, day=row_day)
                 if start_date <= row_date <= end_date:
-                    irradiances.append(float((row[8])/1000))
+                    irradiances.append(float(row[8])*24/1000)
 
     else:
         with open('30degree_averages/30_degree_fixed_tilt.csv', 'r') as csvfile:
@@ -46,7 +46,7 @@ def generate_solar_irradiance(solar_option, start_date, end_date):
                 row_year, row_month, row_day = map(int, row[:3])
                 row_date = date(year=row_year, month=row_month, day=row_day)
                 if start_date <= row_date <= end_date:
-                    irradiances.append(float(row[8])/1000/24)
+                    irradiances.append(float(row[8])*24/1000)
 
 
     return irradiances
@@ -70,7 +70,8 @@ def calc_conversion_efficiency(solar_option, username, password, start_date, end
         solar_irradiance_values = generate_solar_irradiance(solar_option, start_date, end_date)
 
         df = pd.DataFrame(data_cambus)
-        df['Conversion Efficiency'] = [value / (irradiance * solar_area['Cambus']) for value, irradiance in zip(df['Value'], solar_irradiance_values)]
+        df['Conversion Efficiency'] = [value / (irradiance * solar_area['Cambus']) if value < 82 else 0 for value, irradiance in zip(df['Value'], solar_irradiance_values)]
+
     
     elif solar_option == "Electric Vehicle Charging Station":
         ev_stream_id = get_stream_id("Electric Vehicle Charging Station")
