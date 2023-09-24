@@ -6,9 +6,7 @@ import requests
 from requests.auth import HTTPBasicAuth
 
 
-def subarrayAnomaly(user, pw):
-  url = "https://itsnt2259.iowa.uiowa.edu/piwebapi/elements/F1EmAVYciAZHVU6DzQbJjxTxWwimrOBShT7hGiW-T9RdLVfgSVRTTlQyMjU5XFJZQU4gU0FOREJPWFxTT0xBUiBQUk9EVUNUSU9OXEJVUyBCQVJO/elements"
-
+def subarrayChart(url, user, pw):
   response = requests.get(url, auth=HTTPBasicAuth(user, pw))
   
   if response.status_code != 200:
@@ -52,9 +50,6 @@ def subarrayAnomaly(user, pw):
 
   kWh_items = [item for item in extracted_data if "Name" in item and item["Name"] == "KWH Tag"]
 
-  st.write("Sub-Array Anomaly Analysis for the busbarn solar arrays")
-  st.write("This is a graph of all the busbarn subarrays, with the first sub array being the left-most 0 index, and each subsequent sub array follows.")
-
   # Create a DataFrame from the extracted data
   df = pd.DataFrame(extracted_data)
 
@@ -71,40 +66,8 @@ def subarrayAnomaly(user, pw):
   ).properties(
     width=800,  # Adjust the width of the chart as needed
     title='KWH Tag Values Over Time'  # Add a title to the chart
-  ).configure_axisX(labelAngle=45)  # Rotate x-axis labels for better readability
+  ).configure_axisX(labelAngle=0)
 
 # Display the chart using Streamlit
   st.altair_chart(chart, use_container_width=True)  
-
-    
-    
-
-
-
-
-    
-
-
-
-
-
-
-
-    
-
-        
-
-
-
-
-
-
-
-if __name__ == "__main__":
-  load_dotenv()
-  user = os.getenv('USER')
-  pw = os.getenv('PW')
-  main(user, pw)
-    #if login():
-
-   
+  
