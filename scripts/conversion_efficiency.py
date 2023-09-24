@@ -15,6 +15,7 @@ def calc_conversion_efficiency(solar_irradiance, solar_option, username, passwor
         'Cambus': 180.0,
         'EV Charging Station': 237.14
     }
+    
     if solar_option == "Cambus":
         cambus_stream_id = get_stream_id("Cambus")
         response_cambus = get_json_for_dates(start_date, end_date, cambus_stream_id, username, password)
