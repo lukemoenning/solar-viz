@@ -122,44 +122,47 @@ def calculate_monthly_costs(start_date, end_date, solar_option, username, passwo
     #How much does each array save in 20 years
     save_cambus = 20 * yearly_costs_cambus
     save_ev = 20 * yearly_costs_ev
+    #st.write(yearly_costs_cambus)
+    #st.write(save_cambus)
+    #st.write(monthly_costs_cambus)
     #Profits made from each array
     profit_cambus = save_cambus - instillation_cost_cambus
     profit_ev = save_ev - instillation_cost_EV
-        # Create two bar graphs using Altair
-        # Create a DataFrame for the bar graph
-    payback_data = pd.DataFrame({
+    # Create DataFrames for installation costs and savings
+    installation_cost_data = pd.DataFrame({
         "Array": ["Cambus", "EV"],
-        "Installation Cost": [instillation_cost_cambus, instillation_cost_EV],
-        "Costs Saved in 20 Years": [save_cambus, save_ev]
+        "Installation Cost": [instillation_cost_cambus, instillation_cost_EV]
     })
-    
-    bar_chart_1 = alt.Chart(payback_data).mark_bar().encode(
-        x=alt.X("Array:N", title="Array"),
-        y=alt.Y("Installation Cost:Q", title="Cost ($)", axis=alt.Axis(grid=False)),
-        color=alt.Color("Array:N", title="Array"),
-        column=alt.Column("Array:N", title="Array"),
+
+    savings_data = pd.DataFrame({
+      "Array": ["Cambus", "EV"],
+      "Savings in 20 Years": [save_cambus, save_ev]
+    })
+
+    # Create separate bar charts for installation costs and savings
+    chart_installation_cost = alt.Chart(installation_cost_data).mark_bar().encode(
+        x='Array:N',
+        y='Installation Cost:Q',
+        color='Array:N',
+        tooltip=['Array', 'Installation Cost']
     ).properties(
-        width=300,
-        height=300,
-        title="Installation Cost vs. Costs Saved in 20 Years (Cambus)"
+      width=300,
+     title='Installation Cost'
     )
 
-    bar_chart_2 = alt.Chart(payback_data).mark_bar().encode(
-        x=alt.X("Array:N", title="Array"),
-        y=alt.Y("Costs Saved in 20 Years:Q", title="Cost ($)", axis=alt.Axis(grid=False)),
-        color=alt.Color("Array:N", title="Array"),
-        column=alt.Column("Array:N", title="Array"),
+    chart_savings = alt.Chart(savings_data).mark_bar().encode(
+      x='Array:N',
+      y='Savings in 20 Years:Q',
+      color='Array:N',
+      tooltip=['Array', 'Savings in 20 Years']
     ).properties(
-        width=300,
-        height=300,
-        title="Installation Cost vs. Costs Saved in 20 Years (EV)"
+      width=300,
+      title='Savings in 20 Years'
     )
 
-    # Display the two bar graphs
-    st.write(bar_chart_1)
-    st.write(bar_chart_2)
-
-    # Rest of the code...
+    # Display the installation cost and savings charts
+    #st.write(yearly_costs_ev)
+    st.write(chart_installation_cost, chart_savings)
 
 
 
