@@ -3,69 +3,70 @@ import requests
 from requests.auth import HTTPBasicAuth
 import pandas as pd
 import altair as alt
+import csv
 from scripts.getting_DT_from_user import getting_DT_from_user, get_json_for_dates, get_stream_id
 
-def generate_solar_irradiance(num_values, initial_irradiance, irradiance_step, start_date):
-    irradiances =  [initial_irradiance - i * irradiance_step for i in range(num_values)][::-1]
-    # st.write(start_date)
+def generate_solar_irradiance(solar_option, start_date, end_date):
+
+    start_year, start_month, start_day = str(start_date).split('-')
+    end_year, end_month, end_day = str(end_date).split('-')
+    irradiances = []
+
+    if solar_option == "Cambus":
+        in_range = False
+        with open('9degree_averages/9_degree_fixed_tilt.csv', 'r') as csvfile:
+            reader = csv.reader(csvfile)
+            for row in reader:
+                if in_range:
+                    if int(row[0]) <= int(end_year):
+                        if int(row[1]) <= int(end_month):
+                            if int(row[2]) <= int(end_day):
+                                irradiances.append(row[3])
+                        in_range = False
+                elif int(row[0])==int(start_year):
+                    if int(row[1])==int(start_month):
+                        if int(row[2])==int(start_day):
+                            in_range = True
+                            irradiances.append(row[3])
+
+    elif solar_option == "Electric Vehicle Charging Station":
+        in_range = False
+        with open('30degree_averages/30_degree_fixed_tilt.csv', 'r') as csvfile:
+            reader = csv.reader(csvfile)
+            for row in reader:
+                if in_range:
+                    if int(row[0]) <= int(end_year):
+                        if int(row[1]) <= int(end_month):
+                            if int(row[2]) <= int(end_day):
+                                irradiances.append(row[3])
+                        in_range = False
+                elif int(row[0])==int(start_year):
+                    if int(row[1])==int(start_month):
+                        if int(row[2])==int(start_day):
+                            in_range = True
+                            irradiances.append(row[3])
+
+    else:
+        in_range = False
+        with open('30degree_averages/30_degree_fixed_tilt.csv', 'r') as csvfile:
+            reader = csv.reader(csvfile)
+            for row in reader:
+                if in_range:
+                    if int(row[0]) <= int(end_year):
+                        if int(row[1]) <= int(end_month):
+                            if int(row[2]) <= int(end_day):
+                                irradiances.append(row[3])
+                        in_range = False
+                elif int(row[0])==int(start_year):
+                    if int(row[1])==int(start_month):
+                        if int(row[2])==int(start_day):
+                            in_range = True
+                            irradiances.append(row[3])
     return irradiances
-    # start_year, start_month, start_day = start_date.split('-')
-    # end_year, end_month, end_day = end_date.split('-')
-    # st.write(start_year, start_month, start_day)
-    # irradiances = []
-    # if solar_option == "Cambus":
-    #     in_range = False
-    #     with open('9degree_averages/9_degree_fixed_tilt.csv', 'r') as csvfile:
-    #         reader = csv.reader(csvfile)
-    #         for row in reader:
-    #             if in_range:
-    #                 if int(row[0]) <= int(end_year):
-    #                     if int(row[1]) <= int(end_month):
-    #                         if int(row[2]) <= int(end_day):
-    #                             irradiances.append(row[3])
-    #                     in_range = False
-    #             elif int(row[0])==int(start_year):
-    #                 if int(row[1])==int(start_month):
-    #                     if int(row[2])==int(start_day):
-    #                         in_range = True
-    #                         irradiances.append(row[3])
 
-    # elif solar_option == "Electric Vehicle Charging Station":
-    #     in_range = False
-    #     with open('30degree_averages/30_degree_fixed_tilt.csv', 'r') as csvfile:
-    #         reader = csv.reader(csvfile)
-    #         for row in reader:
-    #             if in_range:
-    #                 if int(row[0]) <= int(end_year):
-    #                     if int(row[1]) <= int(end_month):
-    #                         if int(row[2]) <= int(end_day):
-    #                             irradiances.append(row[3])
-    #                     in_range = False
-    #             elif int(row[0])==int(start_year):
-    #                 if int(row[1])==int(start_month):
-    #                     if int(row[2])==int(start_day):
-    #                         in_range = True
-    #                         irradiances.append(row[3])
+def calc_conversion_efficiency(solar_option, username, password, start_date, end_date):
+    st.write("hello")
 
-    # else:
-    #     in_range = False
-    #     with open('30degree_averages/30_degree_fixed_tilt.csv', 'r') as csvfile:
-    #         reader = csv.reader(csvfile)
-    #         for row in reader:
-    #             if in_range:
-    #                 if int(row[0]) <= int(end_year):
-    #                     if int(row[1]) <= int(end_month):
-    #                         if int(row[2]) <= int(end_day):
-    #                             irradiances.append(row[3])
-    #                     in_range = False
-    #             elif int(row[0])==int(start_year):
-    #                 if int(row[1])==int(start_month):
-    #                     if int(row[2])==int(start_day):
-    #                         in_range = True
-    #                         irradiances.append(row[3])
-    # return irradiances
-
-def calc_conversion_efficiency(solar_irradiance, solar_option, username, password, start_date, end_date):
     solar_area = {
         'Cambus': 180.0/10.7639,
         'EV Charging Station': 267.14/10.7639
@@ -122,9 +123,9 @@ def calc_conversion_efficiency(solar_irradiance, solar_option, username, passwor
 
 def main2(start_date, end_date, solar_option, username, password):
     # Define solar irradiance values
-    initial_irradiance = 10.0  # Initial solar irradiance
-    num_values = 10  # Adjust the number of values as needed
-    solar_irradiance = generate_solar_irradiance(num_values, max(solar_irradiance), initial_irradiance, start_date)
+    solar_irradiance = generate_solar_irradiance(solar_option, start_date, end_date)
+    st.write("hello2")
+
 
     # Calculate conversion efficiency
     df = calc_conversion_efficiency(solar_irradiance, solar_option, username, password, start_date, end_date)
