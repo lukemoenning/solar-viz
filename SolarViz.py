@@ -38,14 +38,14 @@ def main(user, pw):
 
 
 if __name__ == "__main__":
-  # login_result = login()
-  # if login_result is not None:
-  #     user, pw = login_result
-  #     main(user, pw)
+  login_result = login()
+  if login_result is not None:
+      user, pw = login_result
+      main(user, pw)
   
   
   # JUST FOR DEVELOPMENT PURPOSES
-  load_dotenv()
-  user = os.getenv('USER')
-  pw = os.getenv('PW')
-  main(user, pw)
+  # load_dotenv()
+  # user = os.getenv('USER')
+  # pw = os.getenv('PW')
+  # main(user, pw)
