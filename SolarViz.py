@@ -26,14 +26,14 @@ def main(user, pw):
     start_date, end_date = displayChart(user,pw)
 
 
-  for _ in range(5):
-    st.write(" ")
-  analysis_columns = st.columns(3)
-  with analysis_columns[1]:
-    if st.button("In-Depth Analysis"):
-      home_page.empty()
-      with analysis_page.container():
-        analysis(analysis_page, user, pw)
+    for _ in range(5):
+      st.write(" ")
+    analysis_columns = st.columns(3)
+    with analysis_columns[2]:
+      if st.button("In-Depth Analysis"):
+        home_page.empty()
+        with analysis_page.container():
+          analysis(analysis_page, user, pw)
 
 
 
