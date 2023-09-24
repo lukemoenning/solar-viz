@@ -113,4 +113,58 @@ def calculate_monthly_costs(start_date, end_date, solar_option, username, passwo
     )
 
     st.write(chart)
+    ##Start payback analysis
+    instillation_cost_EV = 890479.6
+    instillation_cost_cambus = 509531
+    #Calculate yearly costs for each array
+    yearly_costs_cambus = sum(monthly_costs_cambus.values())
+    yearly_costs_ev = sum(monthly_costs_ev.values())
+    #How much does each array save in 20 years
+    save_cambus = 20 * yearly_costs_cambus
+    save_ev = 20 * yearly_costs_ev
+    #Profits made from each array
+    profit_cambus = save_cambus - instillation_cost_cambus
+    profit_ev = save_ev - instillation_cost_EV
+        # Create two bar graphs using Altair
+        # Create a DataFrame for the bar graph
+    payback_data = pd.DataFrame({
+        "Array": ["Cambus", "EV"],
+        "Installation Cost": [instillation_cost_cambus, instillation_cost_EV],
+        "Costs Saved in 20 Years": [save_cambus, save_ev]
+    })
+    
+    bar_chart_1 = alt.Chart(payback_data).mark_bar().encode(
+        x=alt.X("Array:N", title="Array"),
+        y=alt.Y("Installation Cost:Q", title="Cost ($)", axis=alt.Axis(grid=False)),
+        color=alt.Color("Array:N", title="Array"),
+        column=alt.Column("Array:N", title="Array"),
+    ).properties(
+        width=300,
+        height=300,
+        title="Installation Cost vs. Costs Saved in 20 Years (Cambus)"
+    )
+
+    bar_chart_2 = alt.Chart(payback_data).mark_bar().encode(
+        x=alt.X("Array:N", title="Array"),
+        y=alt.Y("Costs Saved in 20 Years:Q", title="Cost ($)", axis=alt.Axis(grid=False)),
+        color=alt.Color("Array:N", title="Array"),
+        column=alt.Column("Array:N", title="Array"),
+    ).properties(
+        width=300,
+        height=300,
+        title="Installation Cost vs. Costs Saved in 20 Years (EV)"
+    )
+
+    # Display the two bar graphs
+    st.write(bar_chart_1)
+    st.write(bar_chart_2)
+
+    # Rest of the code...
+
+
+
+
+
+
     return chart, monthly_costs_data
+
