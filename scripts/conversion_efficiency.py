@@ -6,23 +6,61 @@ import altair as alt
 import csv
 from scripts.getting_DT_from_user import getting_DT_from_user, get_json_for_dates, get_stream_id
 
-def generate_solar_irradiance(solar_option):
+def generate_solar_irradiance(solar_option, start_date, end_date):
+    start_year, start_month, start_day = start_date.split('-')
+    end_year, end_month, end_day = end_date.split('-')
+    st.write(start_year, start_month, start_day)
     irradiances = []
     if solar_option == "Cambus":
+        in_range = False
         with open('9degree_averages/9_degree_fixed_tilt.csv', 'r') as csvfile:
             reader = csv.reader(csvfile)
             for row in reader:
-                irradiances.append(row)
+                if in_range:
+                    if int(row[0]) <= int(end_year):
+                        if int(row[1]) <= int(end_month):
+                            if int(row[2]) <= int(end_day):
+                                irradiances.append(row[3])
+                        in_range = False
+                elif int(row[0])==int(start_year):
+                    if int(row[1])==int(start_month):
+                        if int(row[2])==int(start_day):
+                            in_range = True
+                            irradiances.append(row[3])
+
     elif solar_option == "Electric Vehicle Charging Station":
+        in_range = False
         with open('30degree_averages/30_degree_fixed_tilt.csv', 'r') as csvfile:
             reader = csv.reader(csvfile)
             for row in reader:
-                irradiances.append(row)
+                if in_range:
+                    if int(row[0]) <= int(end_year):
+                        if int(row[1]) <= int(end_month):
+                            if int(row[2]) <= int(end_day):
+                                irradiances.append(row[3])
+                        in_range = False
+                elif int(row[0])==int(start_year):
+                    if int(row[1])==int(start_month):
+                        if int(row[2])==int(start_day):
+                            in_range = True
+                            irradiances.append(row[3])
+
     else:
+        in_range = False
         with open('30degree_averages/30_degree_fixed_tilt.csv', 'r') as csvfile:
             reader = csv.reader(csvfile)
             for row in reader:
-                irradiances.append(row)
+                if in_range:
+                    if int(row[0]) <= int(end_year):
+                        if int(row[1]) <= int(end_month):
+                            if int(row[2]) <= int(end_day):
+                                irradiances.append(row[3])
+                        in_range = False
+                elif int(row[0])==int(start_year):
+                    if int(row[1])==int(start_month):
+                        if int(row[2])==int(start_day):
+                            in_range = True
+                            irradiances.append(row[3])
     return irradiances
 
 
@@ -53,7 +91,7 @@ def calc_conversion_efficiency(solar_irradiance, solar_option, username, passwor
         # Generate solar irradiance values based on data length
         num_values = len(data_ev)
         irradiance_step = (max(solar_irradiance) - min(solar_irradiance)) / num_values
-        solar_irradiance_values = generate_solar_irradiance(num_values, max(solar_irradiance), irradiance_step)
+        solar_irradiance_values = generate_solar_irradiance(solar_option, start_date, end_date)
 
         df = pd.DataFrame(data_ev)
         df['Conversion Efficiency'] = [value / (irradiance * solar_area['EV Charging Station']) for value, irradiance in zip(df['Value'], solar_irradiance_values)]
@@ -74,7 +112,7 @@ def calc_conversion_efficiency(solar_irradiance, solar_option, username, passwor
         # Generate solar irradiance values based on data length
         num_values = len(df)
         irradiance_step = (max(solar_irradiance) - min(solar_irradiance)) / num_values
-        solar_irradiance_values = generate_solar_irradiance(num_values, max(solar_irradiance), irradiance_step)
+        solar_irradiance_values = generate_solar_irradiance(solar_option, start_date, end_date)
 
         # Calculate conversion efficiency for combined data
         df['Conversion Efficiency'] = [value / (irradiance * solar_area[df['SolarOption'].iloc[i]]) for i, (value, irradiance) in enumerate(zip(df['Value'], solar_irradiance_values))]
@@ -84,7 +122,7 @@ def main2(start_date, end_date, solar_option, username, password):
     # Define solar irradiance values
     initial_irradiance = 10.0  # Initial solar irradiance
     num_values = 10  # Adjust the number of values as needed
-    solar_irradiance = generate_solar_irradiance(num_values, initial_irradiance, 0.5)
+    solar_irradiance = generate_solar_irradiance(solar_option, start_date, end_date)
 
     # Calculate conversion efficiency
     df = calc_conversion_efficiency(solar_irradiance, solar_option, username, password, start_date, end_date)
