@@ -1,9 +1,12 @@
 import streamlit as st
 import pandas as pd
 import numpy as np
+from scripts.subarrayanomaly import subarrayAnomaly
 
 def analysis(analysis_page, user, pw):
   st.title("Analysis")
+  
+  subarrayAnomaly(user, pw)
   
   # RETURN HOME BUTTON
   
