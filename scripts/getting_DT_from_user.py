@@ -27,8 +27,13 @@ def get_json_for_dates(start_date, end_date, stream_id, username, password):
 
     url = f'{base_url}{stream_id}/summary?starttime={start_datetime}&endtime={end_datetime}&summaryType=Total&summaryDuration=1d'
 
-    response = requests.get(url, auth=HTTPBasicAuth(username, password)).json()
-    return response
+    response = requests.get(url, auth=HTTPBasicAuth(username, password))
+    
+    if response.status_code != 200:
+        st.write("Oops! Something went wrong. Please try again.")
+        return
+    
+    return response.json()
 
 def getting_DT_sum(response):
     """
