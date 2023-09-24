@@ -21,12 +21,11 @@ def displayChart(username, password):
     with columns[0]:
       default_start_date = datetime.today() - pd.Timedelta(days=7)
       start_date = st.date_input(date_options[0], value=default_start_date)
-      granularity = st.radio("Select a Granularity Option", granuality_options)
+      solar_option = st.radio("Select a Solar Option", solar_options)
       
     with columns[1]:
       default_end_date = datetime.today()
       end_date = st.date_input(date_options[1], value=default_end_date)
-      solar_option = st.radio("Select a Solar Option", solar_options)
     
     for _ in range(3):
       st.write(" ")
