@@ -27,8 +27,8 @@ def steamAnalysis(user, pw):
     mmBTU_per_hour_values = []
     kWh_values = []
     kW_values = []
-    Electrical_Array_Sq_Feet_values = []
-    Cambus_Array_Sq_Feet_values = []
+    ev_sqft_values = []
+    cambus_sqft_values = []
 
     # Make the GET request with authentication
     response = requests.get(recorded_data_url, auth=HTTPBasicAuth(user, pw))
@@ -58,15 +58,15 @@ def steamAnalysis(user, pw):
         # Calculate kWh and kW
         kWh = mmBTU_per_hour * conversion_factor
         kW = kWh / time_duration_hours if time_duration_hours > 0 else 0
-        Electrical_Array_Sq_Feet = (kW/49.5)/180
-        Cambus_Array_Sq_Feet = (kW/38)/267.13
+        curr_ev_sqft = (kW/49.5)/180
+        curr_cambus_sqft = (kW/38)/267.13
 
         timestamps.append(timestamp)  
         mmBTU_per_hour_values.append(mmBTU_per_hour)
         kWh_values.append(kWh)
         kW_values.append(kW)
-        Electrical_Array_Sq_Feet_values.append(Electrical_Array_Sq_Feet)
-        Cambus_Array_Sq_Feet_values.append(Cambus_Array_Sq_Feet)
+        ev_sqft_values.append(curr_ev_sqft)
+        cambus_sqft_values.append(curr_cambus_sqft)
 
         prev_timestamp = timestamp
 
@@ -76,66 +76,40 @@ def steamAnalysis(user, pw):
         'MMBTU per hour': mmBTU_per_hour_values,
         'kWh': kWh_values,
         'kW': kW_values,
-        'Electrical_Array_Sq_Feet': Electrical_Array_Sq_Feet_values,
-        'Cambus_Array_Sq_Feet': Cambus_Array_Sq_Feet_values
+        'EV Array Square Feet': ev_sqft_values,
+        'Cambus Array Square Feet': cambus_sqft_values
     })
 
-    chart0 = alt.Chart(df).mark_line().encode(
-        x='Timestamp:T',  # Treat Timestamp as a time field
-        y='MMBTU per hour:Q',  # kWh values on the y-axis (you can change this to other fields)
-        color='MMBTU per hour:Q'  # Color the lines by kWh values (optional)
+    ev_sqft_chart = alt.Chart(df).mark_line().encode(
+        x='Timestamp:T',  
+        y='EV Array Square Feet:Q',  
+        color='EV Array Square Feet:Q'  
     ).properties(
-        width=800  # Set the chart width
+        width=800 
     )
 
-    chart = alt.Chart(df).mark_line().encode(
-        x='Timestamp:T',  # Treat Timestamp as a time field
-        y='kWh:Q',  # kWh values on the y-axis (you can change this to other fields)
-        color='kWh:Q'  # Color the lines by kWh values (optional)
+    cambus_sqft_chart = alt.Chart(df).mark_line().encode(
+        x='Timestamp:T', 
+        y='Cambus Array Square Feet:Q', 
+        color='Cambus Array Square Feet:Q'  
     ).properties(
-        width=800  # Set the chart width
+        width=800 
     )
-
-    chart1 = alt.Chart(df).mark_line().encode(
-        x='Timestamp:T',  # Treat Timestamp as a time field
-        y='kW:Q',  # kWh values on the y-axis (you can change this to other fields)
-        color='kW:Q'  # Color the lines by kWh values (optional)
-    ).properties(
-        width=800  # Set the chart width
-    )
-
-    chart2 = alt.Chart(df).mark_line().encode(
-        x='Timestamp:T',  # Treat Timestamp as a time field
-        y='Electrical_Array_Sq_Feet:Q',  # kWh values on the y-axis (you can change this to other fields)
-        color='Electrical_Array_Sq_Feet:Q'  # Color the lines by kWh values (optional)
-    ).properties(
-        width=800  # Set the chart width
-    )
-
-    chart3 = alt.Chart(df).mark_line().encode(
-        x='Timestamp:T',  # Treat Timestamp as a time field
-        y='Cambus_Array_Sq_Feet:Q',  # kWh values on the y-axis (you can change this to other fields)
-        color='Cambus_Array_Sq_Feet:Q'  # Color the lines by kWh values (optional)
-    ).properties(
-        width=800  # Set the chart width
-    )
-
-    #cost of installing the equivilant amount of solar panels
-    sum_list = sum(Electrical_Array_Sq_Feet_values)
-    average_electrical = sum_list/len(Electrical_Array_Sq_Feet_values)
-    sum_list1 = sum(Cambus_Array_Sq_Feet_values)
-    average_cambus = sum_list1/len(Cambus_Array_Sq_Feet_values)
-
-    cost1 = (average_electrical/180)*890479.6
-    cost2 = (average_cambus/267.13)*509531
-
-    st.altair_chart(chart0)
-    st.altair_chart(chart)
-    st.altair_chart(chart1)
-    st.altair_chart(chart2)
-    st.altair_chart(chart3)
-    st.write("Predicted cost to replace steam plant with Electrical Vehicle Changing Array, without accounting for degradation")
-    st.write(cost1)
-
-    st.write("Predicted cost to replace steam plant with Cambus Array without accounting for degradation")
-    st.write(cost2)
+    
+    cambus_surface_area = 267.13
+    cambus_installation_cost = 509531
+    cambus_sum = sum(cambus_sqft_values)
+    cambus_average = cambus_sum/len(cambus_sqft_values)
+    cambus_cost = (cambus_average/cambus_surface_area)*cambus_installation_cost
+    formatted_cambus_cost = f'${cambus_cost:,.2f}'
+    st.altair_chart(cambus_sqft_chart)
+    st.write("Predicted cost to replace steam plant with Cambus Array without accounting for degradation: ", formatted_cambus_cost)
+    
+    ev_sum = sum(ev_sqft_values)
+    ev_average = ev_sum/len(ev_sqft_values)
+    ev_surface_area = 180
+    ev_installation_cost = 890479.6
+    ev_cost = (ev_average/ev_surface_area)*ev_installation_cost
+    formatted_ev_cost = f'${ev_cost:,.2f}'
+    st.altair_chart(ev_sqft_chart)
+    st.write("Predicted cost to replace steam plant with Electrical Vehicle Changing Array, without accounting for degradation: ", formatted_ev_cost)
