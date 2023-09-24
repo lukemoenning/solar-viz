@@ -42,18 +42,20 @@ def main2(start_date, end_date, solar_option, username, password):
     solar_irradiance = generate_solar_irradiance(num_values, initial_irradiance, 0.5)
 
     # Calculate conversion efficiency
-    conversion_df = calc_conversion_efficiency(solar_irradiance, solar_option, username, password, start_date, end_date)
+    df = calc_conversion_efficiency(solar_irradiance, solar_option, username, password, start_date, end_date)
 
-    # Set the domain for the x-axis to cover a larger range
-    x_domain = (
-        pd.Timestamp(min(conversion_df['Timestamp'])) - pd.Timedelta(days=1),
-        pd.Timestamp(max(conversion_df['Timestamp'])) + pd.Timedelta(days=1)
-    )
+    # # Set the domain for the x-axis to cover a larger range
+    # x_domain = (
+    #     pd.Timestamp(min(conversion_df['Timestamp'])) - pd.Timedelta(days=1),
+    #     pd.Timestamp(max(conversion_df['Timestamp'])) + pd.Timedelta(days=1)
+    # )
+    # st.write(df)
+    # st.write("Chart Configuration:")
 
     # Plot the conversion efficiency
-    if not conversion_df.empty:
-        conversion_chart = alt.Chart(conversion_df).mark_line().encode(
-            x=alt.X('Timestamp:T', scale=alt.Scale(domain=x_domain)),
+    if not df.empty:
+        conversion_chart = alt.Chart(df).mark_line().encode(
+            x=alt.X('Timestamp:T', axis=alt.Axis(title='Energy (kWh)', format='%Y-%m-%d %H:%M:%S')),
             y=alt.Y('Conversion Efficiency:Q', axis=alt.Axis(title='Conversion Efficiency')),
             color='SolarOption:N',
             tooltip=['Timestamp:T', 'Conversion Efficiency:Q']
@@ -61,7 +63,7 @@ def main2(start_date, end_date, solar_option, username, password):
             width=700,  # Set a fixed width
             height=300,  # Set a fixed height
             title=f'Conversion Efficiency for {solar_option}'
-        ) + alt.Chart(conversion_df).mark_circle(size=100).encode(
+        ) + alt.Chart(df).mark_circle(size=100).encode(
             x='Timestamp:T',
             y='Conversion Efficiency:Q',
             tooltip=['Timestamp:T', 'Conversion Efficiency:Q']
