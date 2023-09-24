@@ -1,14 +1,22 @@
-from collections import namedtuple
 import altair as alt
 import pandas as pd
 import streamlit as st
 import requests
+import asyncio
+import aiohttp
+from aiohttp import BasicAuth
 from requests.auth import HTTPBasicAuth
 
+async def fetch_data(session, value_link, user, pw):
+  async with session.get(value_link, auth=BasicAuth(user, pw)) as response:
+    if response.status != 200:
+      print("There was an error retrieving the data.")
+      return
+      
+    json_data = await response.json()
+    return value_link, json_data
 
-def subarrayAnomaly(user, pw):
-  url = "https://itsnt2259.iowa.uiowa.edu/piwebapi/elements/F1EmAVYciAZHVU6DzQbJjxTxWwimrOBShT7hGiW-T9RdLVfgSVRTTlQyMjU5XFJZQU4gU0FOREJPWFxTT0xBUiBQUk9EVUNUSU9OXEJVUyBCQVJO/elements"
-
+async def subarrayChart(url, user, pw):
   response = requests.get(url, auth=HTTPBasicAuth(user, pw))
   
   if response.status_code != 200:
@@ -25,11 +33,19 @@ def subarrayAnomaly(user, pw):
 
   json_data_list = []
   
-  for value_link in value_links:
-    response = requests.get(value_link, auth=HTTPBasicAuth(user, pw))
-    if response.status_code == 200:
-      json_data = response.json()  # Retrieve JSON content from the response
-      json_data_list.append(json_data)
+  async with aiohttp.ClientSession() as session:
+    tasks = []
+    for value_link in value_links:
+        task = fetch_data(session, value_link, user, pw)
+        tasks.append(task)
+
+    responses = await asyncio.gather(*tasks)
+    
+    # Sort responses based on the original order of value_links
+    sorted_responses = sorted(responses, key=lambda x: value_links.index(x[0]))
+
+    # Extract the JSON data from the sorted responses
+    json_data_list = [response[1] for response in sorted_responses]
 
   extracted_data = []
 
@@ -52,9 +68,6 @@ def subarrayAnomaly(user, pw):
 
   kWh_items = [item for item in extracted_data if "Name" in item and item["Name"] == "KWH Tag"]
 
-  st.write("Sub-Array Anomaly Analysis for the busbarn solar arrays")
-  st.write("This is a graph of all the busbarn subarrays, with the first sub array being the left-most 0 index, and each subsequent sub array follows.")
-
   # Create a DataFrame from the extracted data
   df = pd.DataFrame(extracted_data)
 
@@ -71,40 +84,8 @@ def subarrayAnomaly(user, pw):
   ).properties(
     width=800,  # Adjust the width of the chart as needed
     title='KWH Tag Values Over Time'  # Add a title to the chart
-  ).configure_axisX(labelAngle=45)  # Rotate x-axis labels for better readability
+  ).configure_axisX(labelAngle=0)
 
 # Display the chart using Streamlit
   st.altair_chart(chart, use_container_width=True)  
-
-    
-    
-
-
-
-
-    
-
-
-
-
-
-
-
-    
-
-        
-
-
-
-
-
-
-
-if __name__ == "__main__":
-  load_dotenv()
-  user = os.getenv('USER')
-  pw = os.getenv('PW')
-  main(user, pw)
-    #if login():
-
-   
+  
