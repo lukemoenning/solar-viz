@@ -2,6 +2,7 @@ import streamlit as st
 import pandas as pd
 import numpy as np
 import asyncio
+from scripts.steam_analysis import steamAnalysis
 from scripts.subarray_chart import subarrayChart
 
 def analysis(analysis_page, user, pw):
@@ -20,6 +21,9 @@ def analysis(analysis_page, user, pw):
   st.write("This is a graph of all the electric vehicle charging subarrays, with the first sub array being the left-most 0 index, and each subsequent sub array follows.")
   evURL = baseURL + "F1EmAVYciAZHVU6DzQbJjxTxWwYTCY6CdT7hGiW-T9RdLVfgSVRTTlQyMjU5XFJZQU4gU0FOREJPWFxTT0xBUiBQUk9EVUNUSU9OXEVMRUNUUklDIFZFSElDTEUgQ0hBUkdJTkc/elements"
   asyncio.run(subarrayChart(evURL, user, pw))
+  
+  # Steam Analysis
+  steamAnalysis(user, pw)
   
   
   # RETURN HOME BUTTON
