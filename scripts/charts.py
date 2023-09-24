@@ -5,6 +5,7 @@ from datetime import datetime
 import altair as alt
 from scripts.getting_DT_from_user import getting_DT_from_user
 from scripts.conversion_efficiency import calc_conversion_efficiency, main2
+from scripts.cost_graph import calculate_monthly_costs
 
 
 def displayChart(username, password):
@@ -43,6 +44,11 @@ def displayChart(username, password):
       main2(start_date, end_date, solar_option, username, password)
     except:
       st.write("Oops! Something went wrong loading the data. Please try again.")
+
+    try:
+      calculate_monthly_costs(start_date, end_date, solar_option, username, password)
+    except:
+      st.write("Oops! Something went wrong with the cost graph. Please try again.")
 
     # try:
     #   main(start_date, end_date, solar_option, username, password)
