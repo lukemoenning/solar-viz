@@ -1,12 +1,22 @@
-from collections import namedtuple
 import altair as alt
 import pandas as pd
 import streamlit as st
 import requests
+import asyncio
+import aiohttp
+from aiohttp import BasicAuth
 from requests.auth import HTTPBasicAuth
 
+async def fetch_data(session, value_link, user, pw):
+  async with session.get(value_link, auth=BasicAuth(user, pw)) as response:
+    if response.status != 200:
+      print("There was an error retrieving the data.")
+      return
+      
+    json_data = await response.json()
+    return value_link, json_data
 
-def subarrayChart(url, user, pw):
+async def subarrayChart(url, user, pw):
   response = requests.get(url, auth=HTTPBasicAuth(user, pw))
   
   if response.status_code != 200:
@@ -23,11 +33,19 @@ def subarrayChart(url, user, pw):
 
   json_data_list = []
   
-  for value_link in value_links:
-    response = requests.get(value_link, auth=HTTPBasicAuth(user, pw))
-    if response.status_code == 200:
-      json_data = response.json()  # Retrieve JSON content from the response
-      json_data_list.append(json_data)
+  async with aiohttp.ClientSession() as session:
+    tasks = []
+    for value_link in value_links:
+        task = fetch_data(session, value_link, user, pw)
+        tasks.append(task)
+
+    responses = await asyncio.gather(*tasks)
+    
+    # Sort responses based on the original order of value_links
+    sorted_responses = sorted(responses, key=lambda x: value_links.index(x[0]))
+
+    # Extract the JSON data from the sorted responses
+    json_data_list = [response[1] for response in sorted_responses]
 
   extracted_data = []
 
