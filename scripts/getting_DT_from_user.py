@@ -81,11 +81,20 @@ def getting_DT_from_user(username, password, start_date, end_date, solar_option)
         # Calculate the sum of values
         total_energy = df['Value'].sum()
 
+        # st.write("dataframe")
+        # st.write(df)
+        # st.write("min")
+        # st.write(pd.Timestamp(df['Timestamp'].min()))
+        # st.write("max") 
+        # st.write(pd.Timestamp(df['Timestamp'].max()))
+
 
         if not df.empty:
             # Plot the graph with points
             chart = alt.Chart(df).mark_line().encode(
-                x=alt.X('Timestamp:T', scale=alt.Scale(domain=(pd.Timestamp(df['Timestamp'].min()) - pd.Timedelta(days=1), pd.Timestamp(df['Timestamp'].max()) + pd.Timedelta(days=1)))),
+                # x=alt.X('Timestamp:T', scale=alt.Scale(domain=(pd.Timestamp(df['Timestamp'].min()) - pd.Timedelta(days=1), pd.Timestamp(df['Timestamp'].max()) + pd.Timedelta(days=1)))),
+                # y=alt.Y('Value:Q', axis=alt.Axis(title='Energy (kWh)')),
+                x=alt.X('Timestamp:T', axis=alt.Axis(title='Energy (kWh)', format='%Y-%m-%d %H:%M:%S')),  # Adjust the datetime format
                 y=alt.Y('Value:Q', axis=alt.Axis(title='Energy (kWh)')),
                 color='SolarOption:N'
             ).properties(
