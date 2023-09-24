@@ -85,7 +85,8 @@ def steamAnalysis(user, pw):
         y='EV Array Square Feet:Q',  
         color='EV Array Square Feet:Q'  
     ).properties(
-        width=800 
+        width=800, 
+        title='EV Panels Replacing Steam Plant'
     )
 
     cambus_sqft_chart = alt.Chart(df).mark_line().encode(
@@ -93,7 +94,8 @@ def steamAnalysis(user, pw):
         y='Cambus Array Square Feet:Q', 
         color='Cambus Array Square Feet:Q'  
     ).properties(
-        width=800 
+        width=800,
+        title='Cambus Panels Replacing Steam Plant'
     )
     
     cambus_surface_area = 267.13
@@ -104,6 +106,9 @@ def steamAnalysis(user, pw):
     formatted_cambus_cost = f'${cambus_cost:,.2f}'
     st.altair_chart(cambus_sqft_chart)
     st.write("Predicted cost to replace steam plant with Cambus Array without accounting for degradation: ", formatted_cambus_cost)
+    
+    for _ in range(3):
+        st.write(" ")
     
     ev_sum = sum(ev_sqft_values)
     ev_average = ev_sum/len(ev_sqft_values)

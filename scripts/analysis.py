@@ -6,23 +6,36 @@ from scripts.steam_analysis import steamAnalysis
 from scripts.subarray_chart import subarrayChart
 
 def analysis(analysis_page, user, pw):
-  st.title("Analysis")
+  st.title("In-Depth Analysis")
+  divider_color = 'blue'
   
   baseURL = "https://itsnt2259.iowa.uiowa.edu/piwebapi/elements/"
+
+  st.header('Sub-Array Anomaly Analysis')
+  st.write("Here, we look at the sub-arrays for the cambus/busbarn arrays and the electric vehicle charging arrays, to understand how these subarrays are preforming in terms of power output. In both the arrays, there is one subarray that can be seen to underperform.")
+  st.write("In the graphs below, the subarrays are the x-axis. The subarrays are laid out in the same order as given in the API, ie the leftmost point is the first subarray and the rightmost point the last sub array. The y-axis is power output.")
+  
+  for _ in range(2):
+    st.write(" ")
   
   # CAMBUS
-  st.write("Sub-Array Anomaly Analysis for the busbarn solar arrays")
-  st.write("This is a graph of all the busbarn subarrays, with the first sub array being the left-most 0 index, and each subsequent sub array follows.")
   anomalyURL = baseURL + "F1EmAVYciAZHVU6DzQbJjxTxWwimrOBShT7hGiW-T9RdLVfgSVRTTlQyMjU5XFJZQU4gU0FOREJPWFxTT0xBUiBQUk9EVUNUSU9OXEJVUyBCQVJO/elements"
   asyncio.run(subarrayChart(anomalyURL, user, pw))
   
   # EV CHARGING
-  st.write("Sub-Array Anomaly Analysis for the electric vehicle charging solar arrays")
-  st.write("This is a graph of all the electric vehicle charging subarrays, with the first sub array being the left-most 0 index, and each subsequent sub array follows.")
   evURL = baseURL + "F1EmAVYciAZHVU6DzQbJjxTxWwYTCY6CdT7hGiW-T9RdLVfgSVRTTlQyMjU5XFJZQU4gU0FOREJPWFxTT0xBUiBQUk9EVUNUSU9OXEVMRUNUUklDIFZFSElDTEUgQ0hBUkdJTkc/elements"
   asyncio.run(subarrayChart(evURL, user, pw))
   
+  for _ in range(3):
+    st.write(" ")
+  
   # Steam Analysis
+  st.header('Solar Powered Campus Analysis')
+  st.write("Most of the energy on campus is produced on the main powerplant along the Iowa River. The plant provides power mostly through steam, and the amount of steam power produced was given in the api. Using this data, we analyze how much square feet of each solar panel array is needed to replace the steam plant. The first graph displays the power output of the steam plant in MMBTU’s. Using standard conversions, we convert this unit to regular power units, and analyze how much square feet of solar arrays would be needed to replace the steam plant, and how much this would cost to install.")
+  
+  for _ in range(2):
+    st.write(" ")
+  
   steamAnalysis(user, pw)
   
   
